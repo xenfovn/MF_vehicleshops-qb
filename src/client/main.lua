@@ -36,7 +36,7 @@ end
 VehicleShops.Update = function()
   while true do
     local wait_time = 0
-    local plyPos = GetEntityCoords(GetPlayerPed(-1))
+    local plyPos = GetEntityCoords(PlayerPedId())
     if InsideWarehouse then
       local closest,closestDist
       for k,v in pairs(ShopVehicles) do
@@ -112,7 +112,7 @@ VehicleShops.Update = function()
             if IsControlJustReleased(0,47) then
               local doCont = true
               while doCont do
-                local dist = Vdist(GetEntityCoords(GetPlayerPed(-1)),vector3(pos.x,pos.y,pos.z))
+                local dist = Vdist(GetEntityCoords(PlayerPedId()),vector3(pos.x,pos.y,pos.z))
                 if dist > 10.0 then
                   doCont = false
                 end 
@@ -137,7 +137,7 @@ VehicleShops.Update = function()
 end
 
 VehicleShops.GetClosestShop = function()
-  local pos = GetEntityCoords(GetPlayerPed(-1))
+  local pos = GetEntityCoords(PlayerPedId())
   local closest,closestDist
   for k,v in pairs(VehicleShops.Shops) do
     local dist = Vdist(pos.x,pos.y,pos.z,v.locations.entry.x,v.locations.entry.y,v.locations.entry.z)
@@ -164,7 +164,7 @@ VehicleShops.PurchaseStockVehicle = function(vehicle_data,shop_key)
   if VehicleShops.Shops[shop_key].funds >= vehicle_data.price then
     local label = GetLabelText(GetDisplayNameFromVehicleModel(vehicle_data.model))
     QBCore.Functions.Notify("You bought "..label.." for $"..vehicle_data.price," successfully")
-    local plyPed = GetPlayerPed(-1)
+    local plyPed = PlayerPedId()
     local plyPos = GetEntityCoords(plyPed)
     DoScreenFadeOut(500)
     Wait(500)
@@ -239,7 +239,7 @@ VehicleShops.PurchaseStock = function(vehicle)
 end
 
 VehicleShops.EnterWarehouse = function(...)
-  local plyPed = GetPlayerPed(-1)
+  local plyPed = PlayerPedId()
   QBCore.Functions.Notify("Waiting for the models to load")
   Wait(1000)
   DoScreenFadeOut(500)
@@ -490,7 +490,7 @@ VehicleShops.DriveVehicle = function(shop_key)
         local veh = CreateVehicle(props.model,pos.x,pos.y,pos.z,pos.heading,true,true)
         SetEntityAsMissionEntity(veh,true,true)
         QBCore.Functions.SetVehicleProperties(veh,props)
-        TaskWarpPedIntoVehicle(GetPlayerPed(-1),veh,-1)
+        TaskWarpPedIntoVehicle(PlayerPedId(),veh,-1)
         TriggerEvent('vehiclekeys:client:SetOwner', props.plate )
         TriggerEvent('vehiclekeys:client:ToggleEngine')
       else
@@ -715,7 +715,7 @@ VehicleShops.ManagementMenu = function(shop_key)
 end
 
 VehicleShops.DepositVehicle = function(shop_key)
-  local ply_ped = GetPlayerPed(-1)
+  local ply_ped = PlayerPedId()
   if IsPedInAnyVehicle(ply_ped,false) then
     local ply_veh = GetVehiclePedIsUsing(ply_ped,false)
     local driver = GetPedInVehicleSeat(ply_veh,-1)
@@ -735,7 +735,7 @@ VehicleShops.DepositVehicle = function(shop_key)
 end
 
 VehicleShops.CanStockVehicle = function(shop_key,vehicle,callback)
-  local plyPed = GetPlayerPed(-1)
+  local plyPed = PlayerPedId()
   local isEmployed = false
   local PlayerData = QBCore.Functions.GetPlayerData()
   if VehicleShops.Shops[shop_key].owner == PlayerData.steam then 
@@ -789,7 +789,7 @@ VehicleShops.Interact = function(a,b)
 end
 
 VehicleShops.LeaveWarehouse = function()
-  local plyPed = GetPlayerPed(-1)
+  local plyPed = PlayerPedId()
   SetEntityCoordsNoOffset(plyPed, Warehouse.entry.x,Warehouse.entry.y,Warehouse.entry.z)
   SetEntityHeading(plyPed, Warehouse.entry.w)
   VehicleShops.DespawnShop()
@@ -936,7 +936,7 @@ VehicleShops.SpawnShop = function()
   ShopVehicles = {}
   ShopLookup = {}
   local startTime = GetGameTimer()
-  while not IsInteriorReady(GetInteriorAtCoords(GetEntityCoords(GetPlayerPed(-1)))) and GetGameTimer() - startTime < 5000 do Wait(0); end
+  while not IsInteriorReady(GetInteriorAtCoords(GetEntityCoords(PlayerPedId()))) and GetGameTimer() - startTime < 5000 do Wait(0); end
   for k,v in pairs(VehicleShops.WarehouseVehicles) do
     local hash = GetHashKey(v.model)
     local started = GetGameTimer()
@@ -988,7 +988,7 @@ VehicleShops.PurchaseDisplay = function(shop_key,veh_key,veh_ent)
       local veh = CreateVehicle(props.model,pos.x,pos.y,pos.z,pos.heading,true,true)
       SetEntityAsMissionEntity(veh,true,true)
       QBCore.Functions.SetVehicleProperties(veh,props)
-      TaskWarpPedIntoVehicle(GetPlayerPed(-1),veh,-1)
+      TaskWarpPedIntoVehicle(PlayerPedId(),veh,-1)
       SetVehicleEngineOn(veh,true)
     else
       QBCore.Functions.Notify(msg)
@@ -1148,7 +1148,7 @@ VehicleShops.CreateNew = function(...)
             warnBlip = true
           end
           if IsControlJustReleased(0,47) then
-            locations.blip = Vec2Tab(GetEntityCoords(GetPlayerPed(-1)))
+            locations.blip = Vec2Tab(GetEntityCoords(PlayerPedId()))
             Wait(0)
           end
         elseif not locations.entry then
@@ -1157,7 +1157,7 @@ VehicleShops.CreateNew = function(...)
             warnEntry = true
           end
           if IsControlJustReleased(0,47) then
-            locations.entry = Vec2Tab(GetEntityCoords(GetPlayerPed(-1)))
+            locations.entry = Vec2Tab(GetEntityCoords(PlayerPedId()))
             Wait(0)
           end
         elseif not locations.management then
@@ -1166,7 +1166,7 @@ VehicleShops.CreateNew = function(...)
             warnManage = true
           end
           if IsControlJustReleased(0,47) then
-            locations.management = Vec2Tab(GetEntityCoords(GetPlayerPed(-1)))
+            locations.management = Vec2Tab(GetEntityCoords(PlayerPedId()))
             Wait(0)
           end
         elseif not locations.spawn then
@@ -1175,7 +1175,7 @@ VehicleShops.CreateNew = function(...)
             warnSpawn = true
           end
           if IsControlJustReleased(0,47) then
-            local plyPed = GetPlayerPed(-1)
+            local plyPed = PlayerPedId()
             local pos = GetEntityCoords(plyPed)
             local heading = GetEntityHeading(plyPed)
             locations.spawn = Vec2Tab(vector4(pos.x,pos.y,pos.z,heading))
@@ -1187,7 +1187,7 @@ VehicleShops.CreateNew = function(...)
             warnPurchased = true
           end
           if IsControlJustReleased(0,47) then
-            local plyPed = GetPlayerPed(-1)
+            local plyPed = PlayerPedId()
             local pos = GetEntityCoords(plyPed)
             local heading = GetEntityHeading(plyPed)
             locations.purchased = Vec2Tab(vector4(pos.x,pos.y,pos.z,heading))
@@ -1199,7 +1199,7 @@ VehicleShops.CreateNew = function(...)
             warnDeposit = true
           end
           if IsControlJustReleased(0,47) then
-            locations.deposit = Vec2Tab(GetEntityCoords(GetPlayerPed(-1)))
+            locations.deposit = Vec2Tab(GetEntityCoords(PlayerPedId()))
             Wait(0)
           end
         else 
