@@ -1,7 +1,4 @@
--- https://modit.store
--- ModFreakz
-
-fx_version 'adamant'
+fx_version 'cerulean'
 games { 'rdr3', 'gta5' }
 
 mod 'mf-vehicleshops'
@@ -13,8 +10,6 @@ client_scripts {
   'config.lua',
   'src/client/functions.lua',
   'src/client/main.lua',
- 
-  
 }
 
 server_scripts {
