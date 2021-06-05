@@ -5,11 +5,13 @@ Any Qbus server
 
 MenuV from Tigo https://github.com/ThymonA/menuv
 
-Installation
+# Installation
 
-Install Dependencias 
+Install Dependencies 
 
 https://www.mediafire.com/file/hchd9r3n14mpm9c/%255Bautos%255D.rar/file
+
+https://www.mediafire.com/folder/pg5jo4yrifeid/markers
 
 # Start in the server.cfg
 
